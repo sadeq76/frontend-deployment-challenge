@@ -1,5 +1,17 @@
+/*
+ * CSS entry point:
+ * - base.css: element defaults
+ * - themes.css: semantic color tokens and modes
+ * - typography.css: shared type scale utilities
+ * - components.css: selectors intentionally shared by multiple SFCs
+ * - animations.css: shared keyframes and motion helpers
+ *
+ * Component-owned selectors belong in their Vue file's <style scoped> block.
+ * See css-architecture.md for the full ownership rule.
+ */
 @import './base.css';
 @import './themes.css';
+@import './typography.css';
 @import './components.css';
 @import './animations.css';
 

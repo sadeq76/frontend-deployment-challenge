@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, toRef } from 'vue'
+import { computed, ref, toRef } from 'vue'
 
 const props = defineProps<{ open: boolean; src: string; alt: string }>()
 const emit = defineEmits<{ close: [] }>()
 const dialogPanel = ref<HTMLElement | null>(null)
-const closeButton = ref<HTMLElement | null>(null)
+const closeButton = ref<{ element: HTMLElement | null } | null>(null)
+const closeButtonElement = computed(() => closeButton.value?.element ?? null)
 
 function closeDialog() {
   emit('close')
@@ -13,7 +14,7 @@ function closeDialog() {
 const { onKeydown } = useOverlayAccessibility({
   open: toRef(props, 'open'),
   container: dialogPanel,
-  initialFocus: closeButton,
+  initialFocus: closeButtonElement,
   onClose: closeDialog
 })
 </script>
@@ -30,15 +31,15 @@ const { onKeydown } = useOverlayAccessibility({
         class="relative max-h-full max-w-4xl rounded-card bg-surface p-4"
         @keydown="onKeydown"
       >
-        <button
+        <MBtn
           ref="closeButton"
-          type="button"
-          class="absolute left-3 top-3 z-10 grid size-10 place-items-center rounded-lg bg-surface text-xl shadow-card"
+          variant="icon"
+          prepend-icon="PhXCircle"
+          :icon-size="22"
+          class="absolute left-3 top-3 z-10 !rounded-lg !border-0 !bg-surface !text-ink-muted shadow-card"
           :aria-label="$t('product.closeImage')"
           @click="closeDialog"
-        >
-          <MIcon name="CloseCircle" />
-        </button>
+        />
         <img :src="props.src" :alt="props.alt" class="max-h-[80vh] max-w-full object-contain" />
       </div>
     </div>

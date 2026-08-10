@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { ProductSort } from '~/types/product'
 
-const props = defineProps<{ query: string; category: string; sort: ProductSort }>()
-const emit = defineEmits<{ remove: [key: 'q' | 'category' | 'sort'] }>()
+const props = defineProps<{ query: string; category: string[]; sort: ProductSort }>()
+const emit = defineEmits<{ remove: [key: 'q' | 'category' | 'sort', category?: string] }>()
 const { t } = useI18n()
 
 const sortLabels: Partial<Record<ProductSort, string>> = {
@@ -13,10 +13,10 @@ const sortLabels: Partial<Record<ProductSort, string>> = {
 }
 
 const filters = computed(() => {
-  const entries: { key: 'q' | 'category' | 'sort'; label: string }[] = []
+  const entries: { key: 'q' | 'category' | 'sort'; label: string; category?: string }[] = []
 
   if (props.query) entries.push({ key: 'q', label: props.query })
-  if (props.category) entries.push({ key: 'category', label: props.category })
+  props.category.forEach((category) => entries.push({ key: 'category', label: category, category }))
   if (props.sort !== 'default') entries.push({ key: 'sort', label: t(sortLabels[props.sort] ?? '') })
 
   return entries
@@ -25,19 +25,42 @@ const filters = computed(() => {
 
 <template>
   <section class="active-filters-panel" :aria-label="t('listing.activeFilters')">
-    <strong class="active-filters-panel__title">{{ t('listing.activeFilters') }}</strong>
+    <strong class="active-filters-panel__title label-md">{{ t('listing.activeFilters') }}</strong>
     <div v-if="filters.length" class="active-filters-panel__chips">
-      <button
+      <MChip
         v-for="filter in filters"
-        :key="filter.key"
-        type="button"
-        class="active-filters-panel__chip"
-        @click="emit('remove', filter.key)"
-      >
-        <span class="truncate" dir="auto">{{ filter.label }}</span>
-        <MIcon name="CloseCircle" :size="14" />
-      </button>
+        :key="`${filter.key}-${filter.category ?? filter.label}`"
+        :text="filter.label"
+        closable
+        @close="emit('remove', filter.key, filter.category)"
+      />
     </div>
-    <span v-else class="text-xs font-medium leading-4 text-[#9badc1]">{{ t('listing.activeFiltersEmpty') }}</span>
+    <span v-else class="body-xs font-medium text-[#9badc1]">{{ t('listing.activeFiltersEmpty') }}</span>
   </section>
 </template>
+
+<style scoped>
+.active-filters-panel {
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 2px 3px rgb(0 0 0 / 3%);
+}
+
+.active-filters-panel__title {
+  flex: none;
+  color: #445a74;
+}
+
+.active-filters-panel__chips {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+</style>

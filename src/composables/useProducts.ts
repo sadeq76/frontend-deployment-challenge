@@ -9,7 +9,11 @@ export function useProductFilters(products: Ref<Product[]>) {
   const route = useRoute()
   const router = useRouter()
   const query = computed(() => (typeof route.query.q === 'string' ? route.query.q : ''))
-  const category = computed(() => (typeof route.query.category === 'string' ? route.query.category : ''))
+  const selectedCategories = computed<string[]>(() => {
+    const values = Array.isArray(route.query.category) ? route.query.category : [route.query.category]
+
+    return [...new Set(values.filter((value): value is string => typeof value === 'string' && value.trim().length > 0))]
+  })
   const sort = computed<ProductSort>(() => {
     const value = route.query.sort
     return value === 'price-asc' || value === 'price-desc' || value === 'rating-desc' || value === 'title-asc'
@@ -22,7 +26,7 @@ export function useProductFilters(products: Ref<Product[]>) {
     const list = products.value.filter(
       (product: Product) =>
         (!normalizedQuery || product.title.toLocaleLowerCase().includes(normalizedQuery)) &&
-        (!category.value || product.category === category.value)
+        (!selectedCategories.value.length || selectedCategories.value.includes(product.category))
     )
     if (sort.value === 'price-asc') return [...list].sort((a, b) => a.price - b.price)
     if (sort.value === 'price-desc') return [...list].sort((a, b) => b.price - a.price)
@@ -30,16 +34,20 @@ export function useProductFilters(products: Ref<Product[]>) {
     if (sort.value === 'title-asc') return [...list].sort((a, b) => a.title.localeCompare(b.title))
     return list
   })
-  const update = async (changes: Partial<{ q: string; category: string; sort: ProductSort }>) => {
-    const next = { q: query.value, category: category.value, sort: sort.value, ...changes }
+  const update = async (changes: Partial<{ q: string; category: string[]; sort: ProductSort }>) => {
+    const next = { q: query.value, category: selectedCategories.value, sort: sort.value, ...changes }
+    const nextQuery: Record<string, string | string[]> = {}
+
+    if (next.q.trim()) nextQuery.q = next.q.trim()
+    if (next.category.length) nextQuery.category = [...new Set(next.category.filter((value) => value.trim()))]
+    if (next.sort !== 'default') nextQuery.sort = next.sort
+
     await router.push({
-      query: Object.fromEntries(
-        Object.entries(next).filter(([key, value]) => value && !(key === 'sort' && value === 'default'))
-      )
+      query: nextQuery
     })
   }
-  const clear = () => update({ q: '', category: '', sort: 'default' })
-  return { query, category, sort, categories, filteredProducts, update, clear }
+  const clear = () => update({ q: '', category: [], sort: 'default' })
+  return { query, selectedCategories, sort, categories, filteredProducts, update, clear }
 }
 
 export function useProductFormat() {

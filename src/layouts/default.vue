@@ -8,6 +8,5 @@ import AppHeader from './components/app-header.vue'
     <AppHeader />
     <main id="main-content" class="flex-1"><slot /></main>
     <AppFooter />
-    <SupportChatButton />
   </div>
 </template>

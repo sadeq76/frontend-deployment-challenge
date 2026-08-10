@@ -1,24 +1,19 @@
 <script setup lang="ts">
-import { useId } from 'vue'
 import type { ProductSort } from '~/types/product'
 
 const props = defineProps<{
   query: string
-  category: string
+  category: string[]
   sort: ProductSort
   categories: string[]
   categoryCounts: Record<string, number>
 }>()
 const emit = defineEmits<{
-  update: [changes: Partial<{ q: string; category: string; sort: ProductSort }>]
+  update: [changes: Partial<{ q: string; category: string[]; sort: ProductSort }>]
   clear: []
 }>()
 const { t } = useI18n()
 
-const instanceId = useId()
-const searchInputId = `product-search-${instanceId}`
-const sortFieldName = `product-sort-${instanceId}`
-const categoryFieldName = `product-category-${instanceId}`
 const draftQuery = ref(props.query)
 
 const sortOptions: { value: ProductSort; label: string }[] = [
@@ -28,8 +23,8 @@ const sortOptions: { value: ProductSort; label: string }[] = [
   { value: 'rating-desc', label: 'sort.ratingDesc' },
   { value: 'title-asc', label: 'sort.titleAsc' }
 ]
-
-const displayedCategories = computed(() => props.categories)
+const translatedSortOptions = computed(() => sortOptions.map((option) => ({ ...option, label: t(option.label) })))
+const categoryOptions = computed(() => props.categories.map((category) => ({ value: category, label: category })))
 
 watch(
   () => props.query,
@@ -45,66 +40,131 @@ function submit() {
 function categoryCount(category: string) {
   return props.categoryCounts[category] ?? 0
 }
+
+function updateSort(value: string | number | boolean) {
+  if (typeof value !== 'string') return
+
+  const option = sortOptions.find((item) => item.value === value)
+  if (option) emit('update', { sort: option.value })
+}
+
+function updateCategories(value: boolean | (string | number)[]) {
+  if (!Array.isArray(value)) return
+
+  const category = value.filter((item): item is string => typeof item === 'string')
+
+  emit('update', { category })
+}
 </script>
 
 <template>
   <form class="filter-panel" @submit.prevent="submit">
-    <section class="filter-panel__section">
-      <h2 class="filter-panel__heading">{{ t('listing.filterTitle') }}</h2>
-      <label class="sr-only" :for="searchInputId">{{ t('listing.searchLabel') }}</label>
-      <input
-        :id="searchInputId"
-        v-model="draftQuery"
-        class="filter-panel__input"
-        type="search"
-        :placeholder="t('listing.searchPlaceholder')"
-      />
-      <button type="submit" class="filter-panel__search-button">{{ t('listing.applyFilters') }}</button>
-    </section>
-
-    <fieldset class="filter-panel__section">
-      <legend class="filter-panel__heading">{{ t('listing.sortBy') }}</legend>
-      <div class="filter-panel__options">
-        <label v-for="option in sortOptions" :key="option.value" class="filter-panel__option">
-          <span class="filter-panel__option-label">{{ t(option.label) }}</span>
-          <input
-            class="filter-panel__option-control"
-            type="radio"
-            :name="sortFieldName"
-            :checked="props.sort === option.value"
-            @change="emit('update', { sort: option.value })"
+    <MExpandableCard class="filter-panel__card" :title="t('listing.filterTitle')" default-expanded>
+      <template #body>
+        <div class="filter-panel__content">
+          <MText
+            v-model="draftQuery"
+            class="filter-panel__search"
+            type="search"
+            :placeholder="t('listing.searchPlaceholder')"
+            :aria-label="t('listing.searchLabel')"
+            prepend-icon="PhMagnifyingGlass"
           />
-        </label>
-      </div>
-    </fieldset>
+          <MBtn type="submit" class="filter-panel__search-button" :text="t('listing.applyFilters')" />
+        </div>
+      </template>
+    </MExpandableCard>
 
-    <fieldset class="filter-panel__section">
-      <legend class="filter-panel__heading">{{ t('listing.categoryTitle') }}</legend>
-      <div class="filter-panel__options">
-        <label class="filter-panel__option">
-          <span class="filter-panel__option-label">{{ t('listing.allCategories') }}</span>
-          <input
-            class="filter-panel__option-control"
-            type="radio"
-            :name="categoryFieldName"
-            :checked="!props.category"
-            @change="emit('update', { category: '' })"
+    <MExpandableCard class="filter-panel__card" :title="t('listing.sortBy')" default-expanded>
+      <template #body>
+        <MRadioGroup
+          class="filter-panel__options"
+          :model-value="props.sort"
+          :aria-label="t('listing.sortBy')"
+          name="sort"
+          @update:model-value="updateSort"
+        >
+          <MRadio
+            v-for="option in translatedSortOptions"
+            :key="option.value"
+            :value="option.value"
+            :label="option.label"
           />
-        </label>
-        <label v-for="item in displayedCategories" :key="item" class="filter-panel__option">
-          <span class="filter-panel__option-label" dir="auto">{{ item }}</span>
-          <span class="flex items-center gap-2">
-            <span class="filter-panel__count">{{ categoryCount(item) }}</span>
-            <input
-              class="filter-panel__option-control"
-              type="radio"
-              :name="categoryFieldName"
-              :checked="props.category === item"
-              @change="emit('update', { category: item })"
+        </MRadioGroup>
+      </template>
+    </MExpandableCard>
+
+    <MExpandableCard class="filter-panel__card" :title="t('listing.categoryTitle')" default-expanded>
+      <template #body>
+        <div
+          class="filter-panel__options filter-panel__category-options"
+          role="group"
+          :aria-label="t('listing.categoryTitle')"
+        >
+          <div v-for="option in categoryOptions" :key="option.value" class="filter-panel__category-option">
+            <MCheckbox
+              class="filter-panel__category-checkbox"
+              :model-value="props.category"
+              :value="String(option.value)"
+              name="category"
+              @update:model-value="updateCategories"
+            >
+              <span class="filter-panel__category-label" dir="auto">{{ option.label }}</span>
+            </MCheckbox>
+            <MBadge
+              :text="String(categoryCount(String(option.value)))"
+              :color="props.category.includes(String(option.value)) ? '#e20054' : undefined"
             />
-          </span>
-        </label>
-      </div>
-    </fieldset>
+          </div>
+        </div>
+      </template>
+    </MExpandableCard>
   </form>
 </template>
+
+<style scoped>
+.filter-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.filter-panel__content {
+  display: grid;
+  gap: 12px;
+}
+
+.filter-panel__search-button {
+  display: flex;
+  width: 100%;
+}
+
+.filter-panel__options {
+  display: grid;
+  gap: 12px;
+}
+
+.filter-panel__category-options {
+  gap: 16px;
+  padding-top: 4px;
+}
+
+.filter-panel__category-option {
+  display: flex;
+  min-height: 24px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.filter-panel__category-checkbox {
+  flex: 1;
+  min-width: 0;
+}
+
+.filter-panel__category-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

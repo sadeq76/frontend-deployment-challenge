@@ -14,6 +14,11 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', '@nuxtjs/i18n', '@nuxt/image'],
   css: ['~/assets/style/main.css'],
   components: [{ path: '~/components', pathPrefix: false }],
+  typescript: {
+    tsConfig: {
+      exclude: ['../storybook-static']
+    }
+  },
   hooks: {
     'pages:extend': (pages) => removePageComponentRoutes(pages)
   },

@@ -1,0 +1,74 @@
+/*
+ * Shared type scale
+ *
+ * Use these semantic classes for repeated UI text instead of restyling the
+ * same font-size/line-height combination in each component. Component-owned
+ * layout, color, and one-off visual adjustments remain scoped in the SFC.
+ */
+@layer components {
+  .title-sm,
+  .title-md,
+  .title-lg {
+    font-weight: 700;
+    text-align: start;
+  }
+
+  .title-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .title-md {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+
+  .title-lg {
+    font-size: 1.25rem;
+    line-height: 2rem;
+  }
+
+  .body-xs,
+  .body-sm,
+  .body-md,
+  .body-lg {
+    font-weight: 400;
+    text-align: start;
+  }
+
+  .body-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .body-sm {
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+  }
+
+  .body-md {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+
+  .body-lg {
+    font-size: 1rem;
+    line-height: 1.75rem;
+  }
+
+  .label-sm,
+  .label-md {
+    font-weight: 500;
+    text-align: start;
+  }
+
+  .label-sm {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .label-md {
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+  }
+}

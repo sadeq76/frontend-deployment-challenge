@@ -20,14 +20,21 @@ async function search() {
     <h1 class="text-xl font-bold text-ink">{{ t('notFound.title') }}</h1>
     <p class="mt-3 text-sm leading-7 text-ink-muted">{{ t('notFound.body') }}</p>
     <form class="mt-6 flex gap-2" @submit.prevent="search">
-      <MTextField v-model="query" class="flex-1 text-left" :label="t('notFound.searchLabel')" />
-      <MButton type="submit" :disabled="!suggestion">{{ t('notFound.search') }}</MButton>
+      <MText
+        v-model="query"
+        class="flex-1 text-left"
+        :label="t('notFound.searchLabel')"
+        :placeholder="t('notFound.searchLabel')"
+        prepend-icon="PhMagnifyingGlass"
+        clearable
+      />
+      <MBtn type="submit" :text="t('notFound.search')" :disabled="!suggestion" />
     </form>
     <p v-if="suggestion" class="mt-5 text-sm text-ink-muted">
       {{ t('notFound.suggestionBefore') }}
       <NuxtLink :to="suggestion.path" class="font-bold text-brand">{{ t(suggestion.labelKey) }}</NuxtLink>
       {{ t('notFound.suggestionAfter') }}
     </p>
-    <NuxtLink to="/product" class="secondary-button mt-6">{{ t('notFound.viewProducts') }}</NuxtLink>
+    <MBtn href="/product" variant="secondary" class="mt-6" :text="t('notFound.viewProducts')" />
   </section>
 </template>

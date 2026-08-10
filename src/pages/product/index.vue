@@ -6,12 +6,13 @@ import ProductCard from './components/product-card.vue'
 const { t } = useI18n()
 const config = useRuntimeConfig()
 const { data: products, pending, error, refresh } = await useProducts()
-const { query, category, sort, categories, filteredProducts, update, clear } = useProductFilters(products)
+const { query, selectedCategories, sort, categories, filteredProducts, update, clear } = useProductFilters(products)
 const mobileFiltersOpen = ref(false)
 const mobileFilterDialog = ref<HTMLElement | null>(null)
-const mobileFilterCloseButton = ref<HTMLElement | null>(null)
+const mobileFilterCloseButton = ref<{ element: HTMLElement | null } | null>(null)
+const mobileFilterCloseButtonElement = computed(() => mobileFilterCloseButton.value?.element ?? null)
 const isDesktop = ref(false)
-const isFiltered = computed(() => Boolean(query.value || category.value || sort.value !== 'default'))
+const isFiltered = computed(() => Boolean(query.value || selectedCategories.value.length || sort.value !== 'default'))
 const categoryCounts = computed<Record<string, number>>(() =>
   products.value.reduce<Record<string, number>>((counts, product) => {
     counts[product.category] = (counts[product.category] ?? 0) + 1
@@ -29,8 +30,18 @@ useSeoMeta({
 })
 useHead({ link: [{ rel: 'canonical', href: `${config.public.siteUrl.replace(/\/$/, '')}/product` }] })
 
-function removeFilter(key: 'q' | 'category' | 'sort') {
-  update({ [key]: key === 'sort' ? 'default' : '' })
+function removeFilter(key: 'q' | 'category' | 'sort', category?: string) {
+  if (key === 'q') {
+    update({ q: '' })
+    return
+  }
+
+  if (key === 'sort') {
+    update({ sort: 'default' })
+    return
+  }
+
+  update({ category: selectedCategories.value.filter((selectedCategory) => selectedCategory !== category) })
 }
 
 function closeMobileFilters() {
@@ -58,7 +69,7 @@ watch(isDesktop, (desktop) => {
 const { onKeydown: onMobileFilterKeydown } = useOverlayAccessibility({
   open: mobileFiltersOpen,
   container: mobileFilterDialog,
-  initialFocus: mobileFilterCloseButton,
+  initialFocus: mobileFilterCloseButtonElement,
   onClose: closeMobileFilters
 })
 </script>
@@ -67,19 +78,17 @@ const { onKeydown: onMobileFilterKeydown } = useOverlayAccessibility({
   <div class="shell product-list-page">
     <div class="product-list-layout">
       <div class="product-list-main relative">
-        <ActiveFilters :query="query" :category="category" :sort="sort" @remove="removeFilter" />
-        <button
+        <ActiveFilters :query="query" :category="selectedCategories" :sort="sort" @remove="removeFilter" />
+        <MBtn
           v-if="!isDesktop"
-          type="button"
-          class="absolute left-3 top-3 inline-flex h-10 items-center gap-2 rounded-xl bg-brand px-3 text-xs font-bold text-white lg:hidden"
+          class="absolute left-3 top-3 lg:!hidden"
+          prepend-icon="PhFunnel"
+          :text="t('listing.openFilters')"
           :aria-expanded="mobileFiltersOpen"
           aria-controls="mobile-filter-dialog"
           aria-haspopup="dialog"
           @click="mobileFiltersOpen = true"
-        >
-          <MIcon name="Filter" :size="16" />
-          {{ t('listing.openFilters') }}
-        </button>
+        />
 
         <div v-if="pending" class="product-list-grid mt-6" aria-busy="true">
           <div v-for="index in 6" :key="index" class="h-[286px] animate-pulse rounded-card bg-white" />
@@ -108,7 +117,7 @@ const { onKeydown: onMobileFilterKeydown } = useOverlayAccessibility({
       <aside v-if="isDesktop" class="product-list-sidebar" :aria-label="t('listing.filterProducts')">
         <FilterPanel
           :query="query"
-          :category="category"
+          :category="selectedCategories"
           :sort="sort"
           :categories="categories"
           :category-counts="categoryCounts"
@@ -136,20 +145,20 @@ const { onKeydown: onMobileFilterKeydown } = useOverlayAccessibility({
         @keydown="onMobileFilterKeydown"
       >
         <div class="mb-4 flex items-center justify-between">
-          <h2 id="mobile-filter-title" class="text-lg font-bold text-ink">{{ t('listing.filterProducts') }}</h2>
-          <button
+          <h2 id="mobile-filter-title" class="title-md text-ink">{{ t('listing.filterProducts') }}</h2>
+          <MBtn
             ref="mobileFilterCloseButton"
-            type="button"
-            class="grid size-10 place-items-center rounded-xl border border-line bg-white text-ink-muted"
+            variant="icon"
+            prepend-icon="PhXCircle"
+            :icon-size="20"
+            class="!rounded-xl !text-ink-muted"
             :aria-label="t('listing.closeFilters')"
             @click="closeMobileFilters"
-          >
-            <MIcon name="CloseCircle" :size="20" />
-          </button>
+          />
         </div>
         <FilterPanel
           :query="query"
-          :category="category"
+          :category="selectedCategories"
           :sort="sort"
           :categories="categories"
           :category-counts="categoryCounts"
@@ -160,3 +169,43 @@ const { onKeydown: onMobileFilterKeydown } = useOverlayAccessibility({
     </div>
   </Teleport>
 </template>
+
+<style scoped>
+.product-list-page {
+  padding-block: 24px 0;
+}
+
+.product-list-layout {
+  display: grid;
+  gap: 24px;
+}
+
+.product-list-main,
+.product-list-sidebar {
+  min-width: 0;
+  direction: rtl;
+}
+
+.product-list-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px 16px;
+}
+
+@media (min-width: 768px) {
+  .product-list-page {
+    padding-top: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-list-layout {
+    grid-template-columns: minmax(0, 1fr) 266px;
+    direction: ltr;
+  }
+
+  .product-list-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+</style>

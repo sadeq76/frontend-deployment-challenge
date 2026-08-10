@@ -2,6 +2,7 @@
   color-scheme: light;
   --color-primary: 226 0 84;
   --color-primary-hover: 198 0 73;
+  --color-primary-ink: 168 0 62;
   --color-primary-soft: 252 229 238;
   --color-media: 208 221 236;
   --color-secondary: 10 42 81;
@@ -12,6 +13,7 @@
   --color-ink: var(--color-secondary);
   --color-ink-muted: 68 90 116;
   --color-ink-soft: 100 126 154;
+  --color-badge: 20 25 40;
   --color-canvas: var(--color-background);
 }
 
@@ -19,6 +21,7 @@
   color-scheme: dark;
   --color-primary: 255 76 138;
   --color-primary-hover: 255 122 168;
+  --color-primary-ink: 168 0 62;
   --color-primary-soft: 82 31 61;
   --color-media: 37 60 94;
   --color-secondary: 219 234 254;
@@ -29,5 +32,6 @@
   --color-ink: var(--color-secondary);
   --color-ink-muted: 191 211 236;
   --color-ink-soft: 158 181 215;
+  --color-badge: 20 25 40;
   --color-canvas: var(--color-background);
 }

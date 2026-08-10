@@ -32,7 +32,7 @@ const specs = computed(() => {
 
   return [
     { key: 'price', label: t('product.price'), value: price(product.value.price) },
-    { key: 'description', label: t('product.description'), value: product.value.description },
+    { key: 'description', label: t('product.description'), value: product.value.description, multiline: true },
     { key: 'category', label: t('product.category'), value: product.value.category },
     { key: 'rating', label: t('product.rating'), value: number(product.value.rating.rate) },
     { key: 'votes', label: t('product.votes'), value: number(product.value.rating.count) }
@@ -85,12 +85,12 @@ useHead({
   <div class="shell product-detail-page">
     <nav class="product-breadcrumb" :aria-label="t('product.breadcrumbProducts')">
       <NuxtLink to="/" class="product-breadcrumb__link">
-        <MIcon name="Home" :size="16" />
+        <MIcon name="PhHouse" :size="16" />
         {{ t('product.breadcrumbHome') }}
       </NuxtLink>
-      <MIcon name="ArrowLeft" :size="14" />
+      <MIcon name="PhArrowLeft" :size="14" />
       <NuxtLink to="/product" class="product-breadcrumb__link">{{ t('product.breadcrumbProducts') }}</NuxtLink>
-      <MIcon name="ArrowLeft" :size="14" />
+      <MIcon name="PhArrowLeft" :size="14" />
       <span class="hidden truncate text-[#30445b] md:inline" :title="product?.title" dir="auto">
         {{ product?.title ?? t('state.loading') }}
       </span>
@@ -111,7 +111,7 @@ useHead({
 
     <template v-else-if="product">
       <article class="product-hero-card">
-        <h1 class="product-hero-card__title" :title="product.title" dir="auto">{{ product.title }}</h1>
+        <h1 class="product-hero-card__title title-md" :title="product.title" dir="auto">{{ product.title }}</h1>
         <div class="product-hero-card__image-wrap">
           <img
             :src="product.image"
@@ -121,33 +121,128 @@ useHead({
             class="product-hero-card__image"
             decoding="async"
           />
-          <button
-            type="button"
-            class="product-hero-card__zoom"
+          <MBtn
+            variant="icon"
+            prepend-icon="PhMagnifyingGlassPlus"
+            class="product-hero-card__zoom !rounded-[13px] !border-0 !bg-black/50 !text-white"
             :aria-label="t('product.zoom')"
             @click="imageOpen = true"
-          >
-            <MIcon name="SearchZoomIn" :size="24" />
-          </button>
+          />
         </div>
       </article>
 
       <article class="product-specs-card">
-        <h2 class="product-specs-card__title">{{ t('product.technical') }}</h2>
-        <dl class="product-specs-list">
-          <div
-            v-for="item in specs"
-            :key="item.key"
-            class="product-spec-row"
-            :class="{ 'product-spec-row--description': item.key === 'description' }"
-          >
-            <dt>{{ item.label }}</dt>
-            <dd dir="auto">{{ item.value }}</dd>
-          </div>
-        </dl>
+        <h2 class="product-specs-card__title title-lg">{{ t('product.technical') }}</h2>
+        <MDataTable class="product-specs-list" :label="t('product.technical')" :rows="specs" />
       </article>
 
       <ProductImageDialog :open="imageOpen" :src="product.image" :alt="product.title" @close="imageOpen = false" />
     </template>
   </div>
 </template>
+
+<style scoped>
+.product-detail-page {
+  padding-block: 24px 0;
+}
+
+.product-breadcrumb {
+  display: flex;
+  min-height: 24px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  margin-bottom: 24px;
+  color: #57728e;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.product-breadcrumb__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: inherit;
+}
+
+.product-breadcrumb__link:hover,
+.product-breadcrumb__link:focus-visible {
+  color: #e20054;
+}
+
+.product-hero-card {
+  overflow: hidden;
+  padding: 16px 16px 24px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
+}
+
+.product-hero-card__title {
+  height: 24px;
+  margin: 0 0 32px;
+  overflow: hidden;
+  color: #0a2a51;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.product-hero-card__image-wrap {
+  position: relative;
+  height: 235px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #e20054;
+}
+
+.product-hero-card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.product-hero-card__zoom {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.product-specs-card {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
+}
+
+.product-specs-card__title {
+  margin: 0;
+  color: #0a2a51;
+}
+
+.product-specs-list {
+  margin: 24px 0 0;
+}
+
+@media (min-width: 768px) {
+  .product-detail-page {
+    padding-top: 24px;
+  }
+
+  .product-hero-card {
+    height: 414px;
+    padding: 24px;
+  }
+
+  .product-hero-card__image-wrap {
+    height: 310px;
+  }
+
+  .product-specs-card {
+    padding: 24px;
+  }
+}
+</style>
