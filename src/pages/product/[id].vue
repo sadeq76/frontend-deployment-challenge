@@ -10,7 +10,7 @@ const route = useRoute()
 const { t } = useI18n()
 const config = useRuntimeConfig()
 const productId = computed(() => String(route.params.id))
-const figmaProductImage = '/images/figma/product-door.png'
+const { number, price } = useProductFormat()
 const {
   data: product,
   pending,
@@ -27,20 +27,24 @@ if (error.value) {
 }
 
 const canonical = computed(() => `${config.public.siteUrl.replace(/\/$/, '')}/product/${productId.value}`)
-const specs = computed(() => [
-  { key: 'price', label: t('product.price'), value: t('product.designPrice') },
-  { key: 'description', label: t('product.description'), value: t('product.designDescription') },
-  { key: 'category', label: t('product.category'), value: t('product.designCategory') },
-  { key: 'rating', label: t('product.rating'), value: t('product.designRating') },
-  { key: 'votes', label: t('product.votes'), value: t('product.designVotes') }
-])
+const specs = computed(() => {
+  if (!product.value) return []
+
+  return [
+    { key: 'price', label: t('product.price'), value: price(product.value.price) },
+    { key: 'description', label: t('product.description'), value: product.value.description },
+    { key: 'category', label: t('product.category'), value: product.value.category },
+    { key: 'rating', label: t('product.rating'), value: number(product.value.rating.rate) },
+    { key: 'votes', label: t('product.votes'), value: number(product.value.rating.count) }
+  ]
+})
 
 useSeoMeta({
-  title: () => `${t('product.designTitle')} | ${t('brand.name')}`,
-  description: () => t('product.designDescription'),
-  ogTitle: () => t('product.designTitle'),
-  ogDescription: () => t('product.designDescription'),
-  ogImage: () => `${config.public.siteUrl.replace(/\/$/, '')}${figmaProductImage}`,
+  title: () => (product.value ? `${product.value.title} | ${t('brand.name')}` : t('state.loading')),
+  description: () => product.value?.description ?? '',
+  ogTitle: () => product.value?.title ?? t('brand.name'),
+  ogDescription: () => product.value?.description ?? '',
+  ogImage: () => product.value?.image,
   twitterCard: 'summary_large_image',
   robots: 'index,follow'
 })
@@ -54,14 +58,20 @@ useHead({
             children: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'Product',
-              name: t('product.designTitle'),
-              description: t('product.designDescription'),
-              image: `${config.public.siteUrl.replace(/\/$/, '')}${figmaProductImage}`,
-              category: t('product.designCategory'),
+              name: product.value.title,
+              description: product.value.description,
+              image: product.value.image,
+              category: product.value.category,
               aggregateRating: {
                 '@type': 'AggregateRating',
-                ratingValue: 2,
-                reviewCount: 5
+                ratingValue: product.value.rating.rate,
+                reviewCount: product.value.rating.count
+              },
+              offers: {
+                '@type': 'Offer',
+                price: product.value.price,
+                priceCurrency: 'USD',
+                availability: 'https://schema.org/InStock'
               }
             })
           }
@@ -81,7 +91,9 @@ useHead({
       <MIcon name="ArrowLeft" :size="14" />
       <NuxtLink to="/product" class="product-breadcrumb__link">{{ t('product.breadcrumbProducts') }}</NuxtLink>
       <MIcon name="ArrowLeft" :size="14" />
-      <span class="hidden truncate text-[#30445b] md:inline">{{ t('product.designTitle') }}</span>
+      <span class="hidden truncate text-[#30445b] md:inline" :title="product?.title" dir="auto">
+        {{ product?.title ?? t('state.loading') }}
+      </span>
     </nav>
 
     <div v-if="pending" class="space-y-6" aria-busy="true">
@@ -99,14 +111,15 @@ useHead({
 
     <template v-else-if="product">
       <article class="product-hero-card">
-        <h1 class="product-hero-card__title">{{ t('product.designTitle') }}</h1>
+        <h1 class="product-hero-card__title" :title="product.title" dir="auto">{{ product.title }}</h1>
         <div class="product-hero-card__image-wrap">
           <img
-            :src="figmaProductImage"
-            :alt="t('product.designTitle')"
-            width="990"
-            height="660"
+            :src="product.image"
+            :alt="product.title"
+            width="1064"
+            height="310"
             class="product-hero-card__image"
+            decoding="async"
           />
           <button
             type="button"
@@ -129,17 +142,12 @@ useHead({
             :class="{ 'product-spec-row--description': item.key === 'description' }"
           >
             <dt>{{ item.label }}</dt>
-            <dd>{{ item.value }}</dd>
+            <dd dir="auto">{{ item.value }}</dd>
           </div>
         </dl>
       </article>
 
-      <ProductImageDialog
-        :open="imageOpen"
-        :src="figmaProductImage"
-        :alt="t('product.designTitle')"
-        @close="imageOpen = false"
-      />
+      <ProductImageDialog :open="imageOpen" :src="product.image" :alt="product.title" @close="imageOpen = false" />
     </template>
   </div>
 </template>

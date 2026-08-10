@@ -2,7 +2,13 @@
 import { useId } from 'vue'
 import type { ProductSort } from '~/types/product'
 
-const props = defineProps<{ query: string; category: string; sort: ProductSort; categories: string[] }>()
+const props = defineProps<{
+  query: string
+  category: string
+  sort: ProductSort
+  categories: string[]
+  categoryCounts: Record<string, number>
+}>()
 const emit = defineEmits<{
   update: [changes: Partial<{ q: string; category: string; sort: ProductSort }>]
   clear: []
@@ -23,7 +29,7 @@ const sortOptions: { value: ProductSort; label: string }[] = [
   { value: 'title-asc', label: 'sort.titleAsc' }
 ]
 
-const displayedCategories = computed(() => props.categories.slice(0, 3))
+const displayedCategories = computed(() => props.categories)
 
 watch(
   () => props.query,
@@ -37,7 +43,7 @@ function submit() {
 }
 
 function categoryCount(category: string) {
-  return props.categories.indexOf(category) + 2
+  return props.categoryCounts[category] ?? 0
 }
 </script>
 

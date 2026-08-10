@@ -12,6 +12,12 @@ const mobileFilterDialog = ref<HTMLElement | null>(null)
 const mobileFilterCloseButton = ref<HTMLElement | null>(null)
 const isDesktop = ref(false)
 const isFiltered = computed(() => Boolean(query.value || category.value || sort.value !== 'default'))
+const categoryCounts = computed<Record<string, number>>(() =>
+  products.value.reduce<Record<string, number>>((counts, product) => {
+    counts[product.category] = (counts[product.category] ?? 0) + 1
+    return counts
+  }, {})
+)
 let desktopMediaQuery: MediaQueryList | undefined
 
 useSeoMeta({
@@ -105,6 +111,7 @@ const { onKeydown: onMobileFilterKeydown } = useOverlayAccessibility({
           :category="category"
           :sort="sort"
           :categories="categories"
+          :category-counts="categoryCounts"
           @update="update"
           @clear="clear"
         />
@@ -145,6 +152,7 @@ const { onKeydown: onMobileFilterKeydown } = useOverlayAccessibility({
           :category="category"
           :sort="sort"
           :categories="categories"
+          :category-counts="categoryCounts"
           @update="update"
           @clear="clear"
         />
