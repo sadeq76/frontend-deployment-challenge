@@ -2,31 +2,47 @@
   "name": "frontend-technical-challenge",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "node ./node_modules/@nuxt/cli/bin/nuxi.mjs dev",
     "build": "node ./node_modules/@nuxt/cli/bin/nuxi.mjs build",
     "preview": "node ./node_modules/@nuxt/cli/bin/nuxi.mjs preview",
+    "storybook": "node --max-old-space-size=6144 ./node_modules/storybook/dist/bin/dispatcher.js dev -p 6006 --disable-telemetry",
+    "storybook:build": "node --max-old-space-size=6144 ./node_modules/storybook/dist/bin/dispatcher.js build --disable-telemetry",
     "typecheck": "node ./node_modules/@nuxt/cli/bin/nuxi.mjs typecheck",
     "lint": "eslint . --max-warnings=0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest run"
   },
   "dependencies": {
     "@nuxt/image": "^1.10.0",
     "@nuxtjs/i18n": "^9.5.0",
     "@nuxtjs/tailwindcss": "^6.14.0",
-    "nuxt": "^3.17.0"
+    "nuxt": "^3.17.0",
+    "vue-iconsax": "^2.0.0"
   },
   "devDependencies": {
-    "@nuxt/cli": "3.37.0",
     "@eslint/js": "^9.22.0",
+    "@nuxt/cli": "3.37.0",
+    "@storybook/addon-a11y": "10.5.7",
+    "@storybook/addon-docs": "10.5.7",
+    "@storybook/vue3-vite": "10.5.7",
     "@types/node": "^22.15.0",
+    "@vitejs/plugin-vue": "^6.0.8",
     "eslint": "^9.22.0",
+    "eslint-config-prettier": "10.1.8",
     "eslint-plugin-vue": "^10.0.0",
+    "prettier": "3.9.6",
+    "prettier-plugin-tailwindcss": "0.8.1",
+    "storybook": "10.5.7",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.0",
-    "vue-tsc": "^2.2.8",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vue": "3.5.0",
+    "vue-tsc": "^2.2.8"
   }
 }

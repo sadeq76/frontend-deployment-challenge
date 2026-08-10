@@ -4,6 +4,5 @@ node_modules
 dist
 coverage
 storybook-static
-.env
-.vercel
 .pnpm-store
+pnpm-lock.yaml
