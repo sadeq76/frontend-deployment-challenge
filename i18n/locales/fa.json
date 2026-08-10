@@ -1,0 +1,8 @@
+{
+  "nav": { "products": "محصولات", "contact": "تماس با ما", "menu": "باز کردن منو", "closeMenu": "بستن منو" },
+  "listing": { "title": "فهرست محصولات", "filterSearch": "فیلتر و جستجو", "searchLabel": "جستجو در عنوان محصولات", "searchPlaceholder": "نام محصول را وارد کنید", "search": "جستجو", "sort": "مرتب‌سازی", "category": "دسته‌بندی", "allCategories": "همه دسته‌ها", "activeFilters": "فیلترهای اعمال‌شده", "clearAll": "پاک کردن همه", "openFilters": "فیلتر و مرتب‌سازی", "results": "{count} محصول" },
+  "sort": { "default": "ترتیب پیش‌فرض", "priceAsc": "قیمت: کم به زیاد", "priceDesc": "قیمت: زیاد به کم", "ratingDesc": "امتیاز: زیاد به کم", "titleAsc": "نام: الف تا ی" },
+  "product": { "viewDetails": "مشاهده جزئیات", "back": "بازگشت به محصولات", "technical": "مشخصات فنی", "price": "قیمت", "description": "توضیحات", "category": "دسته‌بندی", "rating": "امتیاز", "votes": "تعداد رأی", "zoom": "بزرگ‌نمایی تصویر", "closeImage": "بستن تصویر" },
+  "state": { "loading": "در حال دریافت اطلاعات…", "errorTitle": "دریافت اطلاعات ممکن نشد", "errorBody": "لطفاً اتصال اینترنت را بررسی کنید و دوباره تلاش کنید.", "retry": "تلاش مجدد", "emptyTitle": "محصولی پیدا نشد", "emptyBody": "جستجو یا فیلترهای خود را تغییر دهید.", "notFoundTitle": "محصول پیدا نشد", "notFoundBody": "این محصول وجود ندارد یا دیگر در دسترس نیست.", "home": "بازگشت به فهرست" },
+  "footer": { "title": "دسترسی سریع", "about": "درباره ما", "support": "پشتیبانی", "rights": "این پروژه برای چالش فنی Frontend ساخته شده است." }
+}
