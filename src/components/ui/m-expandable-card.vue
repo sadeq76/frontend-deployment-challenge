@@ -2,7 +2,9 @@
 import { computed, ref, useAttrs, useId } from 'vue'
 import MIcon from './m-icon.vue'
 
-defineOptions({ inheritAttrs: false })
+defineOptions({
+  inheritAttrs: false
+})
 
 const props = withDefaults(
   defineProps<{
@@ -36,61 +38,80 @@ const emit = defineEmits<{
 
 const attrs = useAttrs()
 const generatedId = useId()
+
+const localExpanded = ref(props.defaultExpanded)
+
 const rootId = computed(() => props.id ?? `m-expandable-card-${generatedId}`)
+
 const triggerId = computed(() => `${rootId.value}-trigger`)
+
 const contentId = computed(() => `${rootId.value}-content`)
+
 const direction = computed(() => (typeof attrs.dir === 'string' ? attrs.dir : undefined))
+
 const rootAttrs = computed(() => {
   const { dir: _dir, ...nativeAttrs } = attrs
+
   return nativeAttrs
 })
-const localExpanded = ref(props.defaultExpanded)
-const isExpanded = computed(() => props.modelValue ?? localExpanded.value)
+
+const isControlled = computed(() => props.modelValue !== undefined)
+
+const isExpanded = computed(() => (isControlled.value ? props.modelValue! : localExpanded.value))
 
 function toggle() {
-  const nextValue = !isExpanded.value
+  const nextExpanded = !isExpanded.value
 
-  if (props.modelValue === undefined) localExpanded.value = nextValue
+  if (!isControlled.value) localExpanded.value = nextExpanded
 
-  emit('update:modelValue', nextValue)
-  emit('toggle', nextValue)
+  emit('update:modelValue', nextExpanded)
+  emit('toggle', nextExpanded)
 }
 </script>
 
 <template>
-  <section v-bind="rootAttrs" :id="rootId" :dir="direction" class="m-expandable-card">
+  <section :id="rootId" :dir="direction" v-bind="rootAttrs" class="m-expandable-card">
     <h3 class="m-expandable-card__heading">
       <button
         :id="triggerId"
-        type="button"
-        class="m-expandable-card__trigger"
         :aria-controls="contentId"
         :aria-expanded="isExpanded"
         :aria-label="props.title || props.toggleLabel"
+        type="button"
+        class="m-expandable-card__trigger"
         @click="toggle"
       >
         <span class="m-expandable-card__title label-md">
-          <slot name="header" :expanded="isExpanded">{{ props.title }}</slot>
+          <slot :expanded="isExpanded" name="header">
+            {{ props.title }}
+          </slot>
         </span>
+
         <MIcon
-          name="PhCaretDown"
           :size="20"
+          :class="{ 'm-expandable-card__indicator--expanded': isExpanded }"
+          name="PhCaretDown"
           weight="bold"
           class="m-expandable-card__indicator"
-          :class="{ 'm-expandable-card__indicator--expanded': isExpanded }"
           aria-hidden="true"
         />
       </button>
     </h3>
 
     <div
-      v-show="isExpanded"
       :id="contentId"
+      :aria-labelledby="triggerId"
+      :class="{ 'm-expandable-card__body--expanded': isExpanded }"
       class="m-expandable-card__body body-md"
       role="region"
-      :aria-labelledby="triggerId"
     >
-      <slot name="body" :expanded="isExpanded">{{ props.body }}</slot>
+      <div class="m-expandable-card__body-inner">
+        <div class="m-expandable-card__body-content">
+          <slot :expanded="isExpanded" name="body">
+            {{ props.body }}
+          </slot>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -101,8 +122,8 @@ function toggle() {
   min-inline-size: 0;
   overflow: hidden;
   border-radius: 24px;
-  background: rgb(var(--surface-color));
-  color: rgb(var(--ink-muted-color));
+  background: var(--color-surface);
+  color: var(--color-ink-muted);
 }
 
 .m-expandable-card__heading {
@@ -122,6 +143,7 @@ function toggle() {
   color: inherit;
   font: inherit;
   text-align: start;
+  cursor: pointer;
   transition: background-color 160ms ease;
 }
 
@@ -130,14 +152,14 @@ function toggle() {
 }
 
 .m-expandable-card__trigger:focus-visible {
-  outline: 2px solid rgb(var(--primary-color));
+  outline: 2px solid var(--color-primary);
   outline-offset: -2px;
 }
 
 .m-expandable-card__title {
   min-inline-size: 0;
   overflow: hidden;
-  color: rgb(var(--ink-muted-color));
+  color: var(--color-ink-muted);
   text-align: start;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -146,8 +168,8 @@ function toggle() {
 .m-expandable-card__indicator {
   flex: none;
   margin-inline-start: auto;
-  color: rgb(var(--ink-muted-color));
-  transition: transform 160ms ease;
+  color: var(--color-ink-muted);
+  transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
 }
 
 .m-expandable-card__indicator--expanded {
@@ -156,17 +178,48 @@ function toggle() {
 
 .m-expandable-card__body {
   display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  color: var(--color-ink-muted);
+  text-align: start;
+  white-space: pre-line;
+
+  transition:
+    grid-template-rows 240ms cubic-bezier(0.2, 0, 0, 1),
+    opacity 180ms ease,
+    visibility 0s linear 240ms;
+}
+
+.m-expandable-card__body--expanded {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+
+  transition:
+    grid-template-rows 240ms cubic-bezier(0.2, 0, 0, 1),
+    opacity 180ms ease,
+    visibility 0s;
+}
+
+.m-expandable-card__body-inner {
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+.m-expandable-card__body-content {
+  display: grid;
   gap: 16px;
   padding-block: 0 20px;
   padding-inline: 20px;
-  color: rgb(var(--ink-muted-color));
-  text-align: start;
-  white-space: pre-line;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .m-expandable-card__trigger,
-  .m-expandable-card__indicator {
+  .m-expandable-card__indicator,
+  .m-expandable-card__body {
     transition: none;
   }
 }

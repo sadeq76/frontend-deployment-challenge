@@ -24,43 +24,77 @@ const filters = computed(() => {
 </script>
 
 <template>
-  <section class="active-filters-panel" :aria-label="t('listing.activeFilters')">
-    <strong class="active-filters-panel__title label-md">{{ t('listing.activeFilters') }}</strong>
-    <div v-if="filters.length" class="active-filters-panel__chips">
-      <MChip
-        v-for="filter in filters"
-        :key="`${filter.key}-${filter.category ?? filter.label}`"
-        :text="filter.label"
-        closable
-        @close="emit('remove', filter.key, filter.category)"
-      />
+  <section :aria-label="t('listing.activeFilters')" class="active-filters-panel">
+    <strong class="active-filters-panel__title label-md">
+      {{ t('listing.activeFilters') }}
+    </strong>
+
+    <div v-if="filters.length" class="active-filters-panel__viewport">
+      <div class="active-filters-panel__track">
+        <MChip
+          v-for="filter in filters"
+          :key="`${filter.key}-${filter.category ?? filter.label}`"
+          :text="filter.label"
+          class="shrink-0"
+          closable
+          @close="emit('remove', filter.key, filter.category)"
+        />
+      </div>
     </div>
-    <span v-else class="body-xs font-medium text-[#9badc1]">{{ t('listing.activeFiltersEmpty') }}</span>
+
+    <span v-else class="active-filters-panel__empty body-xs font-medium">
+      {{ t('listing.activeFiltersEmpty') }}
+    </span>
   </section>
 </template>
-
 <style scoped>
 .active-filters-panel {
   display: flex;
+  min-width: 0;
   min-height: 64px;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
   border-radius: 24px;
-  background: #fff;
-  box-shadow: 0 2px 3px rgb(0 0 0 / 3%);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .active-filters-panel__title {
   flex: none;
-  color: #445a74;
+  color: var(--color-ink-muted);
 }
 
-.active-filters-panel__chips {
-  display: flex;
+.active-filters-panel__viewport {
   min-width: 0;
-  flex-wrap: wrap;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+}
+
+.active-filters-panel__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.active-filters-panel__track {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
+}
+
+.active-filters-panel__track > * {
+  flex: none;
+  scroll-snap-align: start;
+}
+
+.active-filters-panel__empty {
+  margin-inline-start: auto;
+  color: var(--color-ink-soft);
 }
 </style>

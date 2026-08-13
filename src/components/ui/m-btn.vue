@@ -44,7 +44,16 @@ const element = ref<HTMLElement | null>(null)
 const isLink = computed(() => Boolean(props.href))
 const tag = computed(() => (isLink.value ? 'a' : 'button'))
 const hasContent = computed(() => Boolean(props.text) || Boolean(slots.default))
-const classes = computed(() => ['m-btn', 'body-sm', `m-btn--${props.variant}`])
+const classes = computed(() => [
+  'm-btn',
+  'body-sm',
+  'inline-flex',
+  'min-h-10',
+  'items-center',
+  'justify-center',
+  'gap-2',
+  `m-btn--${props.variant}`
+])
 const forwardedAttrs = computed(() => {
   if (!isLink.value || !props.disabled) return attrs
 
@@ -98,12 +107,6 @@ defineExpose({ element })
 
 <style scoped>
 .m-btn {
-  display: inline-flex;
-  width: fit-content;
-  min-height: 40px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
   border: 1px solid transparent;
   border-radius: 16px;
   padding: 8px 16px;

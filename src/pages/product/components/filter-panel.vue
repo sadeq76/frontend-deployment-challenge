@@ -7,6 +7,7 @@ const props = defineProps<{
   sort: ProductSort
   categories: string[]
   categoryCounts: Record<string, number>
+  defaultExpanded?: boolean
 }>()
 const emit = defineEmits<{
   update: [changes: Partial<{ q: string; category: string[]; sort: ProductSort }>]
@@ -59,7 +60,7 @@ function updateCategories(value: boolean | (string | number)[]) {
 
 <template>
   <form class="filter-panel" @submit.prevent="submit">
-    <MExpandableCard class="filter-panel__card" :title="t('listing.filterTitle')" default-expanded>
+    <MExpandableCard class="filter-panel__card" :title="t('listing.filterTitle')" :default-expanded="defaultExpanded">
       <template #body>
         <div class="filter-panel__content">
           <MText
@@ -75,7 +76,7 @@ function updateCategories(value: boolean | (string | number)[]) {
       </template>
     </MExpandableCard>
 
-    <MExpandableCard class="filter-panel__card" :title="t('listing.sortBy')" default-expanded>
+    <MExpandableCard class="filter-panel__card" :title="t('listing.sortBy')" :default-expanded="defaultExpanded">
       <template #body>
         <MRadioGroup
           class="filter-panel__options"
@@ -94,7 +95,7 @@ function updateCategories(value: boolean | (string | number)[]) {
       </template>
     </MExpandableCard>
 
-    <MExpandableCard class="filter-panel__card" :title="t('listing.categoryTitle')" default-expanded>
+    <MExpandableCard class="filter-panel__card" :title="t('listing.categoryTitle')" :default-expanded="defaultExpanded">
       <template #body>
         <div
           class="filter-panel__options filter-panel__category-options"

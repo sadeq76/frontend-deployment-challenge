@@ -2,14 +2,24 @@
 const { t } = useI18n()
 
 const socialLinks = [
-  { name: 'telegram', icon: '/images/figma/telegram.svg', href: 'https://t.me/', labelKey: 'footer.social.telegram' },
+  {
+    name: 'telegram',
+    icon: '/images/figma/telegram.svg',
+    href: 'https://t.me/',
+    labelKey: 'footer.social.telegram'
+  },
   {
     name: 'instagram',
     icon: '/images/figma/instagram.svg',
     href: 'https://www.instagram.com/',
     labelKey: 'footer.social.instagram'
   },
-  { name: 'twitter', icon: '/images/figma/twitter.svg', href: 'https://x.com/', labelKey: 'footer.social.twitter' },
+  {
+    name: 'twitter',
+    icon: '/images/figma/twitter.svg',
+    href: 'https://x.com/',
+    labelKey: 'footer.social.twitter'
+  },
   {
     name: 'youtube',
     icon: '/images/figma/youtube.svg',
@@ -25,115 +35,156 @@ const socialLinks = [
 ] as const
 
 const footerSocialLinks = [socialLinks[0], socialLinks[1], socialLinks[4]]
-const enamadSrc = '/images/figma/enamad.png'
-const samandehiSrc = '/images/figma/samandehi.png'
+
+const trustBadges = [
+  {
+    name: 'enamad',
+    src: '/images/figma/enamad.png',
+    href: 'https://enamad.ir/',
+    labelKey: 'footer.enamad'
+  },
+  {
+    name: 'samandehi',
+    src: '/images/figma/samandehi.png',
+    href: 'https://samandehi.ir/',
+    labelKey: 'footer.samandehi'
+  }
+] as const
 </script>
 
 <template>
-  <footer id="contact" class="mt-[120px] rounded-t-[16px] bg-white text-[#253343]">
-    <div class="shell py-10 lg:h-[264px] lg:py-10">
+  <footer id="contact" class="bg-surface text-ink mt-[120px] overflow-hidden rounded-t-[16px]">
+    <div class="shell py-10 lg:min-h-[272px]">
       <div
         dir="ltr"
-        class="grid gap-10 sm:grid-cols-2 lg:h-full lg:grid-cols-3 lg:items-start lg:gap-x-12 lg:gap-y-0 xl:grid-cols-[200px_200px_180px] xl:justify-start xl:gap-x-[100px] xl:px-9"
+        class="grid gap-10 sm:grid-cols-2 lg:grid-cols-[200px_200px_180px_minmax(240px,1fr)] lg:gap-x-12 xl:gap-x-[80px]"
       >
-        <section
-          dir="rtl"
-          class="order-3 sm:col-span-2 lg:order-none lg:col-span-1"
-          aria-labelledby="footer-social-title"
-        >
-          <h2 id="footer-social-title" class="text-right text-xl leading-7 font-bold">{{ t('footer.followUs') }}</h2>
-          <ul class="mt-6 grid gap-3" :aria-label="t('footer.followUs')">
+        <section dir="rtl" class="text-right" aria-labelledby="footer-social-title">
+          <h2 id="footer-social-title" class="text-xl leading-7 font-bold">
+            {{ t('footer.followUs') }}
+          </h2>
+
+          <ul :aria-label="t('footer.followUs')" class="mt-6 grid gap-3">
             <li v-for="social in footerSocialLinks" :key="social.name">
               <a
                 :href="social.href"
+                :aria-label="t(social.labelKey)"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="hover:text-primary flex items-center justify-end gap-3 text-[13px] leading-6 font-medium text-[#4b4b4d] transition-colors"
-                :aria-label="t(social.labelKey)"
+                class="text-ink-muted hover:text-primary flex items-center justify-end gap-3 text-[13px] leading-6 font-medium transition-colors"
               >
-                <span>{{ t(social.labelKey) }}</span>
+                <span>
+                  {{ t(social.labelKey) }}
+                </span>
+
                 <img :src="social.icon" alt="" width="24" height="24" class="size-6" aria-hidden="true" />
               </a>
             </li>
           </ul>
-          <p class="mt-3 text-right text-[13px] leading-6 font-medium whitespace-nowrap text-[#4b4b4d]">
-            {{ t('footer.supportHours') }}
-          </p>
         </section>
 
-        <nav dir="rtl" class="order-2 text-right lg:order-none" aria-labelledby="footer-guide-title">
-          <h2 id="footer-guide-title" class="text-xl leading-7 font-bold">{{ t('footer.guide') }}</h2>
-          <ul class="mt-6 grid gap-3 text-[13px] leading-6 font-medium text-[#4b4b4d]">
+        <nav dir="rtl" class="text-right" aria-labelledby="footer-guide-title">
+          <h2 id="footer-guide-title" class="text-xl leading-7 font-bold">
+            {{ t('footer.guide') }}
+          </h2>
+
+          <ul class="text-ink-muted mt-6 grid gap-3 text-[13px] leading-6 font-medium">
             <li>
-              <a href="#contact" class="hover:text-primary transition-colors">{{ t('footer.terms') }}</a>
+              <a href="#contact" class="hover:text-primary transition-colors">
+                {{ t('footer.terms') }}
+              </a>
             </li>
+
             <li>
-              <a href="#contact" class="hover:text-primary transition-colors">{{ t('footer.consultation') }}</a>
+              <a href="#contact" class="hover:text-primary transition-colors">
+                {{ t('footer.consultation') }}
+              </a>
             </li>
+
             <li>
-              <a href="#contact" class="hover:text-primary transition-colors">{{ t('footer.feedback') }}</a>
+              <a href="#contact" class="hover:text-primary transition-colors">
+                {{ t('footer.feedback') }}
+              </a>
             </li>
           </ul>
         </nav>
 
-        <nav dir="rtl" class="order-1 text-right lg:order-none" aria-labelledby="footer-quick-title">
-          <h2 id="footer-quick-title" class="text-xl leading-7 font-bold">{{ t('footer.title') }}</h2>
-          <ul class="mt-6 grid gap-3 text-[13px] leading-6 font-medium text-[#4b4b4d]">
+        <nav dir="rtl" class="text-right" aria-labelledby="footer-quick-title">
+          <h2 id="footer-quick-title" class="text-xl leading-7 font-bold">
+            {{ t('footer.title') }}
+          </h2>
+
+          <ul class="text-ink-muted mt-6 grid gap-3 text-[13px] leading-6 font-medium">
             <li>
-              <a href="#contact" class="text-primary hover:text-primary-hover transition-colors">{{
-                t('footer.about')
-              }}</a>
+              <a href="#contact" class="text-primary hover:text-primary-hover transition-colors">
+                {{ t('footer.about') }}
+              </a>
             </li>
+
             <li>
-              <a href="#contact" class="hover:text-primary transition-colors">{{ t('footer.blog') }}</a>
+              <a href="#contact" class="hover:text-primary transition-colors">
+                {{ t('footer.blog') }}
+              </a>
             </li>
+
             <li>
-              <a href="mailto:hello@example.com" class="hover:text-primary transition-colors">{{ t('nav.contact') }}</a>
+              <a href="mailto:hello@example.com" class="hover:text-primary transition-colors">
+                {{ t('nav.contact') }}
+              </a>
             </li>
+
             <li>
-              <a href="#contact" class="hover:text-primary transition-colors">{{ t('footer.afterSales') }}</a>
+              <a href="#contact" class="hover:text-primary transition-colors">
+                {{ t('footer.afterSales') }}
+              </a>
             </li>
           </ul>
         </nav>
+
+        <div dir="rtl" class="flex items-center justify-end text-right lg:pt-[116px]">
+          <p class="text-ink-muted text-[13px] leading-6 font-medium whitespace-nowrap">
+            {{ t('footer.supportHours') }}
+          </p>
+        </div>
       </div>
     </div>
 
-    <div class="bg-[#f8f9fc]">
-      <div
-        class="shell flex min-h-[220px] flex-col items-center justify-center gap-6 py-8 lg:relative lg:h-[152px] lg:min-h-0 lg:py-6"
-      >
-        <div class="flex items-center gap-16 lg:absolute lg:left-1">
-          <a href="https://enamad.ir/" target="_blank" rel="noopener noreferrer" :aria-label="t('footer.enamad')">
-            <img :src="enamadSrc" :alt="t('footer.enamad')" width="72" height="72" class="size-[72px] object-contain" />
-          </a>
-          <a href="https://samandehi.ir/" target="_blank" rel="noopener noreferrer" :aria-label="t('footer.samandehi')">
-            <img
-              :src="samandehiSrc"
-              :alt="t('footer.samandehi')"
-              width="72"
-              height="72"
-              class="size-[72px] object-contain"
-            />
+    <div class="bg-surface-muted">
+      <div dir="ltr" class="shell grid min-h-[148px] items-center gap-8 py-6 lg:grid-cols-[1fr_auto_1fr]">
+        <div class="flex items-center gap-4 lg:justify-self-start">
+          <a
+            v-for="badge in trustBadges"
+            :key="badge.name"
+            :href="badge.href"
+            :aria-label="t(badge.labelKey)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img :src="badge.src" :alt="t(badge.labelKey)" width="72" height="72" class="size-[72px] object-contain" />
           </a>
         </div>
-        <div
-          class="flex max-w-[320px] flex-col items-center gap-4 text-center lg:absolute lg:left-1/2 lg:-translate-x-1/2"
-        >
-          <ul class="flex items-center gap-4" :aria-label="t('footer.followUs')">
+
+        <div dir="rtl" class="flex flex-col items-center gap-4 text-center">
+          <p class="text-ink-muted max-w-[440px] text-[13px] leading-6 font-medium">
+            {{ t('footer.rights') }}
+          </p>
+
+          <ul :aria-label="t('footer.followUs')" class="flex items-center gap-4">
             <li v-for="social in socialLinks" :key="social.name">
               <a
                 :href="social.href"
+                :aria-label="t(social.labelKey)"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="grid size-6 place-items-center rounded-xs transition-opacity hover:opacity-75"
-                :aria-label="t(social.labelKey)"
+                class="grid size-6 place-items-center transition-opacity hover:opacity-75"
               >
                 <img :src="social.icon" alt="" width="24" height="24" class="size-6" aria-hidden="true" />
               </a>
             </li>
           </ul>
-          <p class="text-[13px] leading-6 font-medium text-[#4b4b4d]">{{ t('footer.rights') }}</p>
         </div>
+
+        <div class="hidden lg:block" aria-hidden="true" />
       </div>
     </div>
   </footer>

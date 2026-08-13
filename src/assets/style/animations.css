@@ -28,4 +28,9 @@
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
+  .m-expandable-card__trigger,
+  .m-expandable-card__indicator,
+  .m-expandable-card__body {
+    transition: none;
+  }
 }
