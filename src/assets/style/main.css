@@ -9,12 +9,10 @@
  * Component-owned selectors belong in their Vue file's <style scoped> block.
  * See css-architecture.md for the full ownership rule.
  */
-@import './base.css';
+@import 'tailwindcss';
+
 @import './themes.css';
+@import './base.css';
 @import './typography.css';
 @import './components.css';
 @import './animations.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;

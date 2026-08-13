@@ -17,8 +17,8 @@ async function search() {
 
 <template>
   <section class="surface-card mx-auto max-w-xl p-8 text-center">
-    <h1 class="text-xl font-bold text-ink">{{ t('notFound.title') }}</h1>
-    <p class="mt-3 text-sm leading-7 text-ink-muted">{{ t('notFound.body') }}</p>
+    <h1 class="text-ink text-xl font-bold">{{ t('notFound.title') }}</h1>
+    <p class="text-ink-muted mt-3 text-sm leading-7">{{ t('notFound.body') }}</p>
     <form class="mt-6 flex gap-2" @submit.prevent="search">
       <MText
         v-model="query"
@@ -30,9 +30,9 @@ async function search() {
       />
       <MBtn type="submit" :text="t('notFound.search')" :disabled="!suggestion" />
     </form>
-    <p v-if="suggestion" class="mt-5 text-sm text-ink-muted">
+    <p v-if="suggestion" class="text-ink-muted mt-5 text-sm">
       {{ t('notFound.suggestionBefore') }}
-      <NuxtLink :to="suggestion.path" class="font-bold text-brand">{{ t(suggestion.labelKey) }}</NuxtLink>
+      <NuxtLink :to="suggestion.path" class="text-primary font-bold">{{ t(suggestion.labelKey) }}</NuxtLink>
       {{ t('notFound.suggestionAfter') }}
     </p>
     <MBtn href="/product" variant="secondary" class="mt-6" :text="t('notFound.viewProducts')" />

@@ -1,5 +1,6 @@
 import { removePageComponentRoutes } from './src/lib/page-routes'
 import { fileURLToPath } from 'node:url'
+import tailwindcss from '@tailwindcss/vite'
 
 const publicDir = fileURLToPath(new URL('./public', import.meta.url))
 
@@ -11,8 +12,7 @@ export default defineNuxtConfig({
   },
   ssr: true,
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/i18n', '@nuxt/image'],
-  css: ['~/assets/style/main.css'],
+  modules: ['@nuxtjs/i18n', '@nuxt/image'],
   components: [{ path: '~/components', pathPrefix: false }],
   typescript: {
     tsConfig: {
@@ -54,5 +54,9 @@ export default defineNuxtConfig({
       meta: [{ name: 'theme-color', content: '#e20054' }]
     }
   },
-  compatibilityDate: '2025-04-24'
+  compatibilityDate: '2025-04-24',
+  vite: {
+    plugins: [tailwindcss()]
+  },
+  css: ['~/assets/style/main.css']
 })

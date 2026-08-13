@@ -99,14 +99,15 @@ defineExpose({ element })
 <style scoped>
 .m-btn {
   display: inline-flex;
+  width: fit-content;
   min-height: 40px;
   align-items: center;
   justify-content: center;
   gap: 8px;
   border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 8px 16px;
-  color: rgb(var(--color-primary-ink));
+  color: rgb(var(--primary-ink-color));
   font-weight: 700;
   text-align: center;
   text-decoration: none;
@@ -118,22 +119,22 @@ defineExpose({ element })
 }
 
 .m-btn--primary {
-  background: rgb(var(--color-primary));
+  background: rgb(var(--primary-color));
   color: #fff;
 }
 
 .m-btn--primary:hover {
-  background: rgb(var(--color-primary-hover));
+  background: rgb(var(--primary-hover-color));
 }
 
 .m-btn--secondary {
-  border-color: rgb(var(--color-line));
-  background: rgb(var(--color-surface));
+  border-color: rgb(var(--line-color));
+  background: rgb(var(--surface-color));
 }
 
 .m-btn--secondary:hover {
-  border-color: rgb(var(--color-primary));
-  background: rgb(var(--color-primary-soft));
+  border-color: rgb(var(--primary-color));
+  background: rgb(var(--primary-soft-color));
 }
 
 .m-btn--link {
@@ -145,7 +146,7 @@ defineExpose({ element })
 }
 
 .m-btn--link:hover {
-  color: rgb(var(--color-primary-ink));
+  color: rgb(var(--primary-ink-color));
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -154,13 +155,13 @@ defineExpose({ element })
   width: 40px;
   min-width: 40px;
   padding-inline: 0;
-  border-color: rgb(var(--color-line));
-  background: rgb(var(--color-surface));
+  border-color: rgb(var(--line-color));
+  background: rgb(var(--surface-color));
 }
 
 .m-btn--icon:hover {
-  border-color: rgb(var(--color-primary));
-  background: rgb(var(--color-primary-soft));
+  border-color: rgb(var(--primary-color));
+  background: rgb(var(--primary-soft-color));
 }
 
 .m-btn:is(:disabled, [aria-disabled='true']) {

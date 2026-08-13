@@ -89,13 +89,13 @@ function updateValue(event: Event) {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgb(var(--color-ink));
+  color: rgb(var(--ink-color));
   cursor: pointer;
 }
 
 .m-checkbox--disabled {
   cursor: not-allowed;
-  color: rgb(var(--color-ink-soft));
+  color: rgb(var(--ink-soft-color));
 }
 
 .m-checkbox__input {
@@ -106,9 +106,9 @@ function updateValue(event: Event) {
   margin: 0;
   appearance: none;
   place-content: center;
-  border: 1px solid rgb(var(--color-line));
+  border: 1px solid rgb(var(--line-color));
   border-radius: 0.375rem;
-  background: rgb(var(--color-surface));
+  background: rgb(var(--surface-color));
   cursor: inherit;
 }
 
@@ -124,8 +124,8 @@ function updateValue(event: Event) {
 
 .m-checkbox__input:checked,
 .m-checkbox__input:indeterminate {
-  border-color: rgb(var(--color-primary));
-  background: rgb(var(--color-primary));
+  border-color: rgb(var(--primary-color));
+  background: rgb(var(--primary-color));
 }
 
 .m-checkbox__input:checked::before {
@@ -141,17 +141,17 @@ function updateValue(event: Event) {
 }
 
 .m-checkbox__input:focus-visible {
-  outline: 2px solid rgb(var(--color-primary));
+  outline: 2px solid rgb(var(--primary-color));
   outline-offset: 2px;
 }
 
 .m-checkbox__input:disabled {
-  border-color: rgb(var(--color-line));
-  background: rgb(var(--color-surface-muted));
+  border-color: rgb(var(--line-color));
+  background: rgb(var(--surface-muted-color));
 }
 
 .m-checkbox__input:disabled::before {
-  border-color: rgb(var(--color-ink-soft));
-  background: rgb(var(--color-ink-soft));
+  border-color: rgb(var(--ink-soft-color));
+  background: rgb(var(--ink-soft-color));
 }
 </style>

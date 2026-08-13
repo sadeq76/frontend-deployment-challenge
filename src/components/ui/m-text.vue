@@ -128,7 +128,7 @@ async function clearValue() {
 }
 
 .m-text__label {
-  color: rgb(var(--color-ink-muted));
+  color: rgb(var(--ink-muted-color));
   text-align: start;
 }
 
@@ -137,18 +137,18 @@ async function clearValue() {
   min-height: 44px;
   align-items: stretch;
   overflow: hidden;
-  border: 1px solid rgb(var(--color-line));
+  border: 1px solid rgb(var(--line-color));
   border-radius: 12px;
-  background: rgb(var(--color-surface));
-  color: rgb(var(--color-ink));
+  background: rgb(var(--surface-color));
+  color: rgb(var(--ink-color));
   transition:
     border-color 180ms ease,
     box-shadow 180ms ease;
 }
 
 .m-text__control:focus-within {
-  border-color: rgb(var(--color-primary));
-  box-shadow: 0 0 0 3px rgb(var(--color-primary) / 12%);
+  border-color: rgb(var(--primary-color));
+  box-shadow: 0 0 0 3px rgb(var(--primary-color) / 12%);
 }
 
 .m-text__control--disabled {
@@ -157,7 +157,7 @@ async function clearValue() {
 }
 
 .m-text__control--readonly {
-  background: rgb(var(--color-surface-muted));
+  background: rgb(var(--surface-muted-color));
 }
 
 .m-text__input {
@@ -173,7 +173,7 @@ async function clearValue() {
 }
 
 .m-text__input::placeholder {
-  color: rgb(var(--color-ink-soft));
+  color: rgb(var(--ink-soft-color));
   opacity: 1;
 }
 
@@ -186,7 +186,7 @@ async function clearValue() {
   display: inline-flex;
   flex: none;
   align-items: center;
-  color: rgb(var(--color-ink-muted));
+  color: rgb(var(--ink-muted-color));
 }
 
 .m-text__adornment {
@@ -202,7 +202,7 @@ async function clearValue() {
   width: 1px;
   flex: none;
   margin-block: 8px;
-  background: rgb(var(--color-line));
+  background: rgb(var(--line-color));
 }
 
 .m-text__clear {
@@ -213,15 +213,15 @@ async function clearValue() {
   border: 0;
   border-radius: 6px;
   background: transparent;
-  color: rgb(var(--color-ink-muted));
+  color: rgb(var(--ink-muted-color));
   transition:
     background-color 180ms ease,
     color 180ms ease;
 }
 
 .m-text__clear:hover:not(:disabled) {
-  background: rgb(var(--color-primary-soft));
-  color: rgb(var(--color-primary));
+  background: rgb(var(--primary-soft-color));
+  color: rgb(var(--primary-color));
 }
 
 .m-text__clear:disabled {

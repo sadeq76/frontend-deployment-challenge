@@ -49,7 +49,7 @@ const isClosable = computed(() => props.closable || props.close)
   padding-inline: 0.5rem;
   border-radius: 1rem;
   background: #fce5ee;
-  color: rgb(var(--color-primary-ink));
+  color: rgb(var(--primary-ink-color));
   font-weight: 500;
 }
 
@@ -80,11 +80,11 @@ const isClosable = computed(() => props.closable || props.close)
 }
 
 .m-chip__close:hover {
-  background: rgb(var(--color-primary) / 12%);
+  background: rgb(var(--primary-color) / 12%);
 }
 
 .m-chip__close:focus-visible {
-  outline: 2px solid rgb(var(--color-primary));
+  outline: 2px solid rgb(var(--primary-color));
   outline-offset: 1px;
 }
 </style>

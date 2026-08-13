@@ -85,13 +85,13 @@ function select(event: Event) {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgb(var(--color-ink));
+  color: rgb(var(--ink-color));
   cursor: pointer;
 }
 
 .m-radio--disabled {
   cursor: not-allowed;
-  color: rgb(var(--color-ink-soft));
+  color: rgb(var(--ink-soft-color));
 }
 
 .m-radio__input {
@@ -102,9 +102,9 @@ function select(event: Event) {
   margin: 0;
   appearance: none;
   place-content: center;
-  border: 1px solid rgb(var(--color-line));
+  border: 1px solid rgb(var(--line-color));
   border-radius: 999px;
-  background: rgb(var(--color-surface));
+  background: rgb(var(--surface-color));
   cursor: inherit;
 }
 
@@ -114,12 +114,12 @@ function select(event: Event) {
   content: '';
   transform: scale(0);
   border-radius: inherit;
-  background: rgb(var(--color-primary));
+  background: rgb(var(--primary-color));
   transition: transform 150ms ease;
 }
 
 .m-radio__input:checked {
-  border-color: rgb(var(--color-primary));
+  border-color: rgb(var(--primary-color));
 }
 
 .m-radio__input:checked::before {
@@ -127,16 +127,16 @@ function select(event: Event) {
 }
 
 .m-radio__input:focus-visible {
-  outline: 2px solid rgb(var(--color-primary));
+  outline: 2px solid rgb(var(--primary-color));
   outline-offset: 2px;
 }
 
 .m-radio__input:disabled {
-  border-color: rgb(var(--color-line));
-  background: rgb(var(--color-surface-muted));
+  border-color: rgb(var(--line-color));
+  background: rgb(var(--surface-muted-color));
 }
 
 .m-radio__input:disabled::before {
-  background: rgb(var(--color-ink-soft));
+  background: rgb(var(--ink-soft-color));
 }
 </style>

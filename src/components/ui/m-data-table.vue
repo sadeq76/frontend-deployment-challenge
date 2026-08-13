@@ -93,17 +93,17 @@ function displayValue(value: unknown) {
   margin: 0;
   padding: 12px 16px;
   border-radius: 16px;
-  background: rgb(var(--color-surface-muted));
+  background: rgb(var(--surface-muted-color));
   text-align: start;
 }
 
 .m-data-table__key {
-  color: rgb(var(--color-ink-muted));
+  color: rgb(var(--ink-muted-color));
 }
 
 .m-data-table__value {
   align-items: flex-start;
-  color: rgb(var(--color-ink));
+  color: rgb(var(--ink-color));
   font-weight: 700;
   white-space: pre-line;
 }
@@ -115,7 +115,7 @@ function displayValue(value: unknown) {
 
 .m-data-table__empty {
   justify-content: center;
-  color: rgb(var(--color-ink-muted));
+  color: rgb(var(--ink-muted-color));
 }
 
 @media (min-width: 480px) {

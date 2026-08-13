@@ -1,37 +1,66 @@
 :root {
   color-scheme: light;
-  --color-primary: 226 0 84;
-  --color-primary-hover: 198 0 73;
-  --color-primary-ink: 168 0 62;
-  --color-primary-soft: 252 229 238;
-  --color-media: 208 221 236;
-  --color-secondary: 10 42 81;
-  --color-background: 233 237 245;
-  --color-surface: 255 255 255;
-  --color-surface-muted: 245 247 250;
-  --color-line: 209 219 232;
-  --color-ink: var(--color-secondary);
-  --color-ink-muted: 68 90 116;
-  --color-ink-soft: 100 126 154;
-  --color-badge: 20 25 40;
-  --color-canvas: var(--color-background);
+  --primary-color: 226 0 84;
+  --primary-hover-color: 198 0 73;
+  --primary-ink-color: 168 0 62;
+  --primary-soft-color: 252 229 238;
+  --media-color: 208 221 236;
+  --secondary-color: 10 42 81;
+  --background-color: 233 237 245;
+  --surface-color: 255 255 255;
+  --surface-muted-color: 245 247 250;
+  --line-color: 209 219 232;
+  --ink-color: 10 42 81;
+  --ink-muted-color: 68 90 116;
+  --ink-soft-color: 100 126 154;
+  --badge-color: 20 25 40;
+  --canvas-color: 233 237 245;
 }
 
 [data-theme='dark'] {
   color-scheme: dark;
-  --color-primary: 255 76 138;
-  --color-primary-hover: 255 122 168;
-  --color-primary-ink: 168 0 62;
-  --color-primary-soft: 82 31 61;
-  --color-media: 37 60 94;
-  --color-secondary: 219 234 254;
-  --color-background: 16 33 59;
-  --color-surface: 23 43 74;
-  --color-surface-muted: 31 55 91;
-  --color-line: 64 88 124;
-  --color-ink: var(--color-secondary);
-  --color-ink-muted: 191 211 236;
-  --color-ink-soft: 158 181 215;
-  --color-badge: 20 25 40;
-  --color-canvas: var(--color-background);
+  --primary-color: 255 76 138;
+  --primary-hover-color: 255 122 168;
+  --primary-ink-color: 168 0 62;
+  --primary-soft-color: 82 31 61;
+  --media-color: 37 60 94;
+  --secondary-color: 219 234 254;
+  --background-color: 16 33 59;
+  --surface-color: 23 43 74;
+  --surface-muted-color: 31 55 91;
+  --line-color: 64 88 124;
+  --ink-color: 219 234 254;
+  --ink-muted-color: 191 211 236;
+  --ink-soft-color: 158 181 215;
+  --badge-color: 20 25 40;
+  --canvas-color: 16 33 59;
+}
+
+@theme inline {
+  --color-primary: rgb(var(--primary-color));
+  --color-primary-hover: rgb(var(--primary-hover-color));
+  --color-primary-ink: rgb(var(--primary-ink-color));
+  --color-primary-soft: rgb(var(--primary-soft-color));
+
+  --color-media: rgb(var(--media-color));
+  --color-secondary: rgb(var(--secondary-color));
+
+  --color-background: rgb(var(--background-color));
+  --color-surface: rgb(var(--surface-color));
+  --color-surface-muted: rgb(var(--surface-muted-color));
+
+  --color-line: rgb(var(--line-color));
+
+  --color-ink: rgb(var(--ink-color));
+  --color-ink-muted: rgb(var(--ink-muted-color));
+  --color-ink-soft: rgb(var(--ink-soft-color));
+
+  --color-badge: rgb(var(--badge-color));
+  --color-canvas: rgb(var(--canvas-color));
+
+  --radius-card: 1.5rem;
+  --radius-control: 1rem;
+
+  --shadow-card: 0 2px 3px rgb(0 0 0 / 3%);
+  --shadow-floating: 0 10px 40px rgb(0 0 0 / 5%);
 }

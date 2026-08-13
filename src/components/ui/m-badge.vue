@@ -30,7 +30,7 @@ const badgeStyle = computed<CSSProperties>(() => {
   justify-content: center;
   padding-inline: 0.5rem;
   border-radius: 0.375rem;
-  background: var(--m-badge-background, rgb(var(--color-badge)));
+  background: var(--m-badge-background, var(--color-badge));
   color: #fff;
   font-weight: 600;
   white-space: nowrap;

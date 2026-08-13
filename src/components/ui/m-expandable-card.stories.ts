@@ -69,7 +69,7 @@ export const SelectionRows: Story = {
           <label v-for="category in categories" :key="category.value" class="flex min-h-6 items-center gap-3">
             <input v-model="selected" :value="category.value" type="checkbox" class="peer sr-only" />
             <span
-              class="grid size-5 shrink-0 place-items-center rounded-[6px] border border-[#b6c6d7] bg-white text-white peer-checked:border-brand peer-checked:bg-brand peer-focus-visible:ring-2 peer-focus-visible:ring-brand peer-focus-visible:ring-offset-2"
+              class="grid size-5 shrink-0 place-items-center rounded-[6px] border border-[#b6c6d7] bg-white text-white peer-checked:border-primary peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2"
               aria-hidden="true"
             >
               <MIcon name="PhCheck" :size="14" weight="bold" class="hidden peer-checked:block" />
@@ -77,7 +77,7 @@ export const SelectionRows: Story = {
             <span class="label-md text-ink-muted">{{ category.label }}</span>
             <span
               class="ms-auto inline-flex min-h-6 min-w-[25px] items-center justify-center rounded-[6px] bg-[#141928] px-1 text-xs font-semibold leading-4 text-white"
-              :class="{ 'bg-brand': selected.includes(category.value) }"
+              :class="{ 'bg-primary': selected.includes(category.value) }"
             >
               {{ category.count }}
             </span>

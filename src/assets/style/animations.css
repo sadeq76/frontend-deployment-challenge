@@ -1,3 +1,24 @@
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+  transition: opacity 300ms ease;
+}
+
+.mobile-menu-enter-active aside,
+.mobile-menu-leave-active aside {
+  transition: transform 300ms ease-in-out;
+}
+
+.mobile-menu-enter-from,
+.mobile-menu-leave-to {
+  opacity: 0;
+}
+
+.mobile-menu-enter-from aside,
+.mobile-menu-leave-to aside {
+  transform: translateX(-100%);
+}
+
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

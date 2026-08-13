@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/vue3-vite'
-import '../src/assets/style/main.css'
+import './src/assets/style/main.css'
 
 export default {
   parameters: {

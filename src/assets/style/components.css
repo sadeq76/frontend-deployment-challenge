@@ -4,26 +4,22 @@
    * SFC's <style scoped> block; see css-architecture.md for the rule.
    */
   .shell {
-    width: calc(100% - 2rem);
-    max-width: 20.5rem;
+    width: 100%;
+    padding-inline: 1rem;
     margin-inline: auto;
   }
 
   .surface-card {
-    @apply rounded-card bg-surface shadow-card;
+    border-radius: 1.5rem;
+    background: rgb(var(--surface-color));
+    box-shadow: 0 2px 3px rgb(0 0 0 / 3%);
   }
 
   @media (min-width: 768px) {
     .shell {
-      width: calc(100% - 160px);
-      max-width: 868px;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    .shell {
-      width: calc(100% - 64px);
-      max-width: 1112px;
+      width: 100%;
+      padding-inline: 10rem;
+      max-width: 1280px;
     }
   }
 }

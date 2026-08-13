@@ -7,21 +7,29 @@
 
 @layer base {
   html {
-    background: rgb(var(--color-canvas));
+    background: rgb(var(--canvas-color));
     font-family: 'Yekan Bakh', Tahoma, Arial, sans-serif;
   }
   body {
-    @apply m-0 min-w-[320px] bg-canvas text-ink antialiased;
+    background: rgb(var(--canvas-color));
+    color: rgb(var(--ink-color));
+    margin: 0;
+    min-width: 320px;
+    -webkit-font-smoothing: antialiased;
   }
   button,
   input,
   select {
     font: inherit;
   }
-  button,
-  a,
-  input,
-  select {
-    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible {
+    outline-style: solid;
+    outline-width: 2px;
+    outline-offset: 2px;
+    outline-color: rgb(var(--primary-color));
   }
 }

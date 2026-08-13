@@ -101,8 +101,8 @@ function toggle() {
   min-inline-size: 0;
   overflow: hidden;
   border-radius: 24px;
-  background: rgb(var(--color-surface));
-  color: rgb(var(--color-ink-muted));
+  background: rgb(var(--surface-color));
+  color: rgb(var(--ink-muted-color));
 }
 
 .m-expandable-card__heading {
@@ -126,18 +126,18 @@ function toggle() {
 }
 
 .m-expandable-card__trigger:hover {
-  background: rgb(var(--color-primary-soft) / 35%);
+  background: rgb(var(--primary-soft-color) / 35%);
 }
 
 .m-expandable-card__trigger:focus-visible {
-  outline: 2px solid rgb(var(--color-primary));
+  outline: 2px solid rgb(var(--primary-color));
   outline-offset: -2px;
 }
 
 .m-expandable-card__title {
   min-inline-size: 0;
   overflow: hidden;
-  color: rgb(var(--color-ink-muted));
+  color: rgb(var(--ink-muted-color));
   text-align: start;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -146,7 +146,7 @@ function toggle() {
 .m-expandable-card__indicator {
   flex: none;
   margin-inline-start: auto;
-  color: rgb(var(--color-ink-muted));
+  color: rgb(var(--ink-muted-color));
   transition: transform 160ms ease;
 }
 
@@ -159,7 +159,7 @@ function toggle() {
   gap: 16px;
   padding-block: 0 20px;
   padding-inline: 20px;
-  color: rgb(var(--color-ink-muted));
+  color: rgb(var(--ink-muted-color));
   text-align: start;
   white-space: pre-line;
 }

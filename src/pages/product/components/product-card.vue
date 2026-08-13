@@ -25,7 +25,7 @@ const { t } = useI18n()
       append-icon="PhArrowLeft"
       :icon-size="16"
       :text="t('product.viewDetails')"
-      class="product-card__action !rounded-2xl !text-brand"
+      class="product-card__action !text-primary !rounded-2xl"
     />
   </article>
 </template>
@@ -49,7 +49,7 @@ const { t } = useI18n()
   flex: none;
   overflow: hidden;
   border-radius: 16px;
-  background: rgb(var(--color-media));
+  background: rgb(var(--media-color));
 }
 
 .product-card__image {

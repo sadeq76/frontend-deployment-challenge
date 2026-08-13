@@ -69,7 +69,7 @@ provide(radioGroupKey, {
 .m-radio-group__label {
   margin-block-end: 8px;
   padding: 0;
-  color: rgb(var(--color-ink));
+  color: rgb(var(--ink-color));
   font-weight: 600;
 }
 
