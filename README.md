@@ -1,49 +1,307 @@
 # Mini Market
 
-Mini Market is a product catalog built with Nuxt 3, Vue Composition API, TypeScript, Tailwind CSS, and the [Fake Store API](https://fakestoreapi.com/docs). It is designed from the supplied Figma storefront while keeping Fake Store data as the authoritative product content.
+Mini Market is a production-oriented product catalog built with **Nuxt 3**, **Vue 3**, **TypeScript**, and **Tailwind CSS v4** from the supplied Figma storefront. Product data is provided by the Fake Store API through a small Nuxt server layer instead of being consumed directly by browser components.
 
 ## Links
 
-- Repository: add the public GitHub URL before submission.
-- Live demo: add the Vercel URL before submission.
+- **Git repository:** `<GITHUB_REPOSITORY_URL>`
+- **Live demo:** `<DEPLOYMENT_URL>`
+
+A source archive is also provided with the technical-challenge submission.
+
+## Tech stack
+
+- Nuxt 3
+- Vue 3 Composition API
+- TypeScript
+- Tailwind CSS v4
+- Nuxt i18n
+- Nuxt Image
+- Storybook
+- Vitest
+- pnpm
 
 ## Running locally
 
+### Requirements
+
+- Node.js 20+
+- pnpm
+
+### Install
+
 ```bash
 pnpm install
-pnpm dev
 ```
 
-Copy `.env.example` to `.env` and set these optional values:
+Copy `.env.example` to `.env` if you want to override the default runtime values:
 
-```bash
+```env
 NUXT_FAKE_STORE_BASE_URL=https://fakestoreapi.com
 NUXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-Use `pnpm test`, `pnpm test:storybook`, `pnpm lint`, `pnpm typecheck`, `pnpm build`, and `pnpm storybook:build` before submission. Run `pnpm storybook` to browse the UI component documentation locally. `pnpm test:storybook` smoke-tests every story in Chromium, executes its interaction checks, and treats accessibility violations as errors.
+Start the development server:
+
+```bash
+pnpm dev
+```
+
+The application is available at `http://localhost:3000` by default.
+
+### Storybook
+
+Run the UI component documentation locally with:
+
+```bash
+pnpm storybook
+```
+
+Storybook is available at `http://localhost:6006` by default.
+
+## Quality commands
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm test:storybook
+pnpm build
+pnpm storybook:build
+```
+
+`test:storybook` runs the Storybook browser project and covers interaction/accessibility scenarios defined by the stories.
 
 ## Architecture decisions
 
-- **Composition API and TypeScript:** Pages/components use `<script setup>` and typed composables. Product API calls are isolated behind Nitro endpoints so browser code never depends directly on the upstream API.
-- **Refactored HTTP client:** The prior client has been vendored under `src/lib/http-client`. The refactor fixes URL and query construction, avoids GET content-type headers and header mutation, handles empty responses, and exposes typed HTTP/network/abort/timeout errors. Focused Vitest coverage protects those contracts.
-- **ISR:** Listing and detail routes use one-hour Vercel ISR. This keeps server-rendered, crawlable HTML while reducing upstream Fake Store traffic. ISR payload extraction also improves client navigation.
-- **i18n:** Persian/RTL is the shipped default and every UI string comes from `i18n/locales/fa.json`. The module uses `prefix_except_default`, so adding English or another locale later does not require route or component rewrites. Fake Store values intentionally remain unmodified.
-- **Tailwind, typography, and mobile-first design:** Tailwind tokens reproduce the Figma palette, rounded white cards, pink accent, and responsive hierarchy. Shared `title-*`, `body-*`, and `label-*` text classes live in `src/assets/style/typography.css`, so repeated UI text stays consistent while component-specific styling remains scoped. Layout styles start at the mobile size and progressively enhance with breakpoints (for example, `px-4 lg:px-12`), because ecommerce browsing is primarily mobile.
-- **CSS architecture:** Shared layout and reusable visual primitives live in `src/assets/style`; selectors owned by one Vue component live in that component’s `<style scoped>` block. See the [CSS architecture guide](src/assets/style/css-architecture.md) for the ownership rule and file map.
-- **SEO, accessibility, and performance:** SSR metadata, canonical URLs, robots, sitemap, Product JSON-LD, responsive optimized images, semantic landmarks, keyboard-accessible overlays, focus states, live status messages, and color-independent form controls are included. Storybook documents every UI primitive; its a11y addon checks every story, while interaction stories cover Tab, Enter, Space, and arrow-key behavior for interactive controls.
+### Feature-local components
+
+Components that only belong to one page or feature are kept close to that feature. Reusable application-wide components live under `src/components`, while shared UI primitives live under `src/components/ui`.
+
+This keeps feature code discoverable and avoids turning a single global component directory into a large flat collection.
+
+A simplified structure is:
+
+```text
+src/
+├── assets/
+│   └── style/
+├── components/
+│   └── ui/
+├── composables/
+├── layouts/
+├── lib/
+├── pages/
+│   └── product/
+│       └── components/
+├── services/
+└── types/
+
+server/
+├── api/
+├── routes/
+└── utils/
+```
+
+### BFF / server layer
+
+The browser does **not** call the Fake Store API directly. Nuxt/Nitro acts as a small **Backend for Frontend (BFF)**:
+
+```text
+Vue UI
+  ↓
+Application service
+  ↓
+Nuxt /api routes
+  ↓
+Runtime validation + error mapping
+  ↓
+Fake Store API
+```
+
+This boundary keeps upstream API details out of components and provides a clear place for future concerns such as authentication, caching, logging, response transformation, rate limiting, or replacing the upstream provider.
+
+The server integration intentionally uses Nuxt's built-in `$fetch` rather than maintaining a custom HTTP-client abstraction. The current upstream requirements are simple GET requests, and `$fetch` already provides the required `baseURL`, timeout, error handling, and request configuration. This keeps the dependency and abstraction surface proportional to the actual scope of the project.
+
+### Runtime validation
+
+External API responses are treated as untrusted runtime data.
+
+Responses are fetched as `unknown` and validated before they are returned to the application UI. TypeScript protects compile-time contracts, but it cannot guarantee the shape of data returned by an external service at runtime.
+
+Malformed upstream responses therefore fail at the server boundary instead of propagating invalid data into Vue components.
+
+### Rendering strategy
+
+Product listing and detail routes use one-hour **ISR (Incremental Static Regeneration)** route rules.
+
+This keeps the pages server-rendered and crawlable while reducing repeated rendering and upstream API work. Depending on the final deployment infrastructure, the same application boundaries can also support an edge-oriented deployment strategy later.
+
+### Internationalization
+
+Persian/RTL is the shipped default, but application text is managed through Nuxt i18n instead of being embedded throughout component logic.
+
+Although multiple languages were not required by the challenge, this structure makes future locale additions much simpler and keeps Persian content separated from implementation code.
+
+### CSS and theme architecture
+
+Shared styles are separated by responsibility:
+
+```text
+src/assets/style/
+├── main.css
+├── base.css
+├── themes.css
+├── typography.css
+├── components.css
+└── animations.css
+```
+
+Theme values are exposed as semantic tokens such as `primary`, `surface`, `surface-muted`, `ink`, `ink-muted`, `line`, and `canvas` instead of scattering hard-coded palette values through components.
+
+This makes dark mode, palette changes, and additional themes easier to evolve without rewriting component styles.
+
+### Responsive design system
+
+The UI is implemented **mobile-first**. Responsive layout behavior is primarily expressed through shared breakpoints and CSS rather than duplicated viewport state in JavaScript.
+
+Where the interaction genuinely changes by device, the component adapts accordingly. For example:
+
+- desktop product filters use a sidebar;
+- mobile product filters use an accessible bottom sheet.
+
+### Dependency strategy
+
+Dependencies are added only when their value justifies their runtime, maintenance, and architectural cost.
+
+Examples in this project:
+
+- overflowing filter chips use native horizontal scrolling instead of a slider/carousel dependency;
+- a full UI framework is avoided because the required component surface is small and design-specific;
+- a headless UI dependency is avoided where the required behavior is straightforward to implement accessibly;
+- the Fake Store integration uses Nuxt `$fetch` instead of a custom HTTP-client layer;
+- CSS and Vue transitions are used directly for lightweight interaction animations.
+
+The goal is not to avoid dependencies categorically; it is to keep every dependency and abstraction intentional.
+
+### UI kit and Storybook
+
+Reusable UI primitives are kept in `src/components/ui` and form the project's small internal UI kit.
+
+A general-purpose UI framework was intentionally not introduced because the supplied design has a limited custom component set and performance/control are important. Storybook provides isolated component documentation and improves DX without coupling the product UI to a larger design framework.
+
+### Routing and SEO
+
+Routes are structured to be predictable for users and search engines:
+
+- `/` permanently redirects to `/product`;
+- `/product` contains the product listing;
+- `/product/:id` contains product details;
+- `/robots.txt` and `/sitemap.xml` are generated by Nitro.
+
+Filtered product views use query parameters and are intentionally `noindex,follow` while canonicalizing to the base product-list route.
+
+The project also includes page metadata, canonical URLs, sitemap generation, robots rules, and Product structured data where relevant.
+
+### 404 experience and fuzzy route matching
+
+The 404 experience uses fuzzy route matching to detect paths that are close to known application routes.
+
+Instead of always presenting a dead end, the UI can suggest the nearest valid destination. Redirects are reserved for cases where a destination is known confidently; ambiguous paths remain explicit suggestions.
+
+### Accessibility
+
+Accessibility is treated as part of component design rather than a final cleanup pass.
+
+The implementation includes, where relevant:
+
+- semantic HTML and landmarks;
+- keyboard navigation;
+- focus-visible states;
+- focus management and restoration;
+- focus trapping for overlays;
+- Escape-key handling;
+- ARIA relationships and state;
+- accessible dialog behavior;
+- `prefers-reduced-motion` handling;
+- RTL-safe interactive controls.
+
+Storybook's accessibility tooling is also used when reviewing the shared UI primitives.
+
+### Performance
+
+Performance-oriented decisions include:
+
+- mobile-first layouts;
+- ISR for product routes;
+- Nuxt Image for responsive image delivery;
+- minimal client-side JavaScript where CSS is sufficient;
+- avoiding unnecessarily large UI/runtime dependencies;
+- semantic theme tokens and reusable primitives;
+- a server boundary around the external API.
 
 ## Routes and filter URLs
 
-- `/` — a permanent redirect to `/product`.
-- `/product` — product listing. Query keys are `q`, repeatable `category` values for multi-category filtering, and `sort` (`price-asc`, `price-desc`, `rating-desc`, or `title-asc`). Filtered views are intentionally `noindex,follow` and canonicalize to `/product`.
+- `/` — permanent redirect to `/product`.
+- `/product` — product listing. Supported query keys are `q`, repeatable `category` values, and `sort` (`price-asc`, `price-desc`, `rating-desc`, or `title-asc`).
 - `/product/:id` — product detail and SEO metadata. Invalid or missing products return a proper 404 state.
-- `/robots.txt` and `/sitemap.xml` are generated by Nitro.
+- `/robots.txt` — generated crawler rules.
+- `/sitemap.xml` — generated sitemap including product routes.
 
-## Manual QA checklist
+## Testing
 
-At 1440px, 1028px, and 360px, verify loading/error/retry states; search/category/sort/clear controls; filter URLs and browser navigation; empty results; product navigation; missing product 404; image zoom; mobile menu close behavior (button, backdrop, Escape); keyboard focus; RTL layout; page metadata; and responsive image loading. In Storybook, tab through each interactive primitive; activate buttons, chips, and disclosures with Enter/Space; use arrow keys for radio/select options; and confirm visible focus and no a11y-addon violations. Run Lighthouse on the Vercel deployment and resolve avoidable accessibility, SEO, best-practice, and performance findings.
+Focused unit tests cover core non-visual logic such as:
+
+- route registry behavior;
+- page-route handling;
+- fuzzy route matching;
+- product runtime validation;
+- sitemap generation.
+
+Storybook provides isolated UI documentation and browser-level interaction/accessibility checks for shared primitives.
+
+Given more time, useful next steps would include broader component unit tests, end-to-end coverage for product/filter flows, and visual regression testing.
+
+## Git workflow
+
+A simple **Git Flow** workflow is appropriate for the current project size.
+
+For future commits, a Conventional Commit-style convention is recommended:
+
+```text
+feat: add new functionality
+fix: resolve a defect
+refactor: restructure code without changing behavior
+test: add or update tests
+docs: update documentation
+chore: maintenance changes
+```
+
+This keeps history easier to review and supports future changelog/release automation.
+
+## Manual QA
+
+At representative mobile, tablet, and desktop widths, verify:
+
+- loading, error, retry, and empty states;
+- search/category/sort/clear filters;
+- URL synchronization and browser navigation;
+- product navigation and missing-product 404 behavior;
+- mobile filter bottom-sheet close behavior (button, backdrop, Escape);
+- keyboard focus and visible focus states;
+- RTL layout;
+- metadata/canonical behavior;
+- responsive image loading.
+
+In Storybook, keyboard-test the interactive primitives and confirm accessibility checks do not report regressions.
 
 ## Deployment
 
-Deploy to Vercel as a Nuxt application. Configure `NUXT_PUBLIC_SITE_URL` with the production origin; retain server rendering (do not use `nuxt generate`) so ISR route rules remain active.
+Deploy as a Nuxt application with server rendering enabled so ISR route rules remain active.
+
+Set `NUXT_PUBLIC_SITE_URL` to the production origin and, when needed, override `NUXT_FAKE_STORE_BASE_URL` for the upstream product service.
+
+## Author
+
+**Sadegh Shahmoradi**
+Frontend Developer
