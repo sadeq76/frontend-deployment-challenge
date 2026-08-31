@@ -9,6 +9,10 @@ Mini Market is a production-oriented product catalog built with **Nuxt 3**, **Vu
 
 A source archive is also provided with the technical-challenge submission.
 
+## Preview
+
+![Mini Market Product Listing](./public/images/app-screenshot.png)
+
 ## Tech stack
 
 - Nuxt 3
